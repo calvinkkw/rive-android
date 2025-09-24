@@ -1,0 +1,17 @@
+# jitpack.yml
+jdk:
+  - openjdk17
+
+before_install:
+  # Initialize submodules
+  - git submodule update --init --recursive
+
+install:
+  # Use Gradle wrapper in the project
+  - ./gradlew --version
+
+# Only build the Kotlin/Android module
+build:
+  gradle:
+    tasks:
+      - :calvin-rive-android:assembleRelease
