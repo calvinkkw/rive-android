@@ -133,6 +133,7 @@ foreach (X IN LISTS static_libs)
 endforeach ()
 
 # Find additional libraries
+# Find additional libraries
 find_library(log-lib log)
 find_library(android-lib android)
 find_library(egl-lib EGL)
