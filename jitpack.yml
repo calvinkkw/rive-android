@@ -1,17 +1,18 @@
-# jitpack.yml
+# Use Java 17 for Gradle plugins compatibility
 jdk:
   - openjdk17
 
-before_install:
-  # Initialize submodules
+# Install phase
+install:
+  # Ensure submodules are initialized
   - git submodule update --init --recursive
 
-install:
-  # Use Gradle wrapper in the project
-  - ./gradlew --version
+  # Clean previous builds
+  - ./gradlew clean
 
-# Only build the Kotlin/Android module
-build:
-  gradle:
-    tasks:
-      - :calvin-rive-android:assembleRelease
+  # Build only the kotlin module and publish to Maven Local
+  - ./gradlew :calvin-rive-android:kotlin:publishToMavenLocal -x test
+
+# Optional: skip tests if you want faster builds
+# skip:
+#   - test
