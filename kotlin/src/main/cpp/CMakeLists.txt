@@ -25,6 +25,7 @@ set(static_libs
         rive_sheenbidi
         rive_yoga
         rive_pls_renderer
+        miniaudio
 )
 
 # Enable C++17
@@ -48,22 +49,8 @@ else ()
     set(RIVE_RUNTIME_DIR "${PACKAGES_DIR}/runtime")
 endif ()
 
-# Add an option to remove miniaudio
-# Passed from Gradle with -DWITH_RIVE_AUDIO=ON|OFF
-option(WITH_RIVE_AUDIO "Enable Rive audio support" ON)
-if (WITH_RIVE_AUDIO)
-    # Compile flag picked up by JNI C++
-    target_compile_definitions(rive-android PRIVATE
-            WITH_RIVE_AUDIO
-            MA_NO_RESOURCE_MANAGER)
-    # Value for Premake --with_rive_audio
-    set(RIVE_AUDIO_ARG "system")
-    # Add to the list of static libraries
-    list(APPEND static_libs miniaudio)
-else ()
-    # Value for Premake --with_rive_audio
-    set(RIVE_AUDIO_ARG "disabled")
-endif ()
+# Provide this manually so Android Studio plays nicely with C++.
+add_definitions(-DWITH_RIVE_AUDIO -DMA_NO_RESOURCE_MANAGER)
 
 # Add an option to enable ASAN
 # Passed from Gradle with -DENABLE_ASAN=ON|OFF
@@ -116,7 +103,7 @@ set(ENV{ANDROID_NDK} "${ANDROID_NDK}")
 
 # Build the Rive C++ runtime and its dependencies as static .a libs
 execute_process(
-        COMMAND bash ${RIVE_RUNTIME_DIR}/build/build_rive.sh --file=premake5_cpp_runtime.lua android ninja ${CONFIG} ${RIVE_ARCH} --no-rive-decoders --with_rive_audio=${RIVE_AUDIO_ARG} ${RIVE_ASAN_FLAG} -- rive_cpp_runtime
+        COMMAND bash ${RIVE_RUNTIME_DIR}/build/build_rive.sh --file=premake5_cpp_runtime.lua android ninja ${CONFIG} ${RIVE_ARCH} --no-rive-decoders --with_rive_audio=system -- rive_cpp_runtime
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         RESULT_VARIABLE SCRIPT_RESULT
         OUTPUT_VARIABLE SCRIPT_OUTPUT
@@ -153,6 +140,7 @@ find_library(gles-lib GLESv3)
 
 # Link additional libraries
 target_link_libraries(rive-android
+        miniaudio-lib
         ${log-lib}
         ${android-lib}
         ${egl-lib}

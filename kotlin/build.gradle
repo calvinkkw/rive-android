@@ -19,8 +19,6 @@ android {
         kotlinCompilerExtensionVersion = compose_compiler_version
     }
 
-    // Enable removing miniaudio to reduce binary size
-    def audioEnabled = !project.hasProperty("noAudio")
     // Enable ASAN support when debugging
     def asanEnabled = project.hasProperty("asan")
 
@@ -50,8 +48,6 @@ android {
                         // Can remove when upgrading to r28+
                         // https://developer.android.com/guide/practices/page-sizes#compile-r27
                         "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON",
-                        // Toggle miniaudio
-                        "-DWITH_RIVE_AUDIO=${audioEnabled ? 'ON' : 'OFF'}",
                         // Needed for ASAN support (if enabled)
                         // See https://developer.android.com/ndk/guides/asan#building
                         // and https://developer.android.com/ndk/guides/cmake#android_arm_mode
