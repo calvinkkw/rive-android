@@ -2,6 +2,14 @@
 jdk:
   - openjdk17
 
+android:
+  ndk:
+    version: 27.2.12479018
+
+before_install:
+  - echo "Listing Android SDK NDK contents..."
+  - ls -al /opt/android-sdk-linux/ndk
+
 # Install phase
 install:
   # Ensure submodules are initialized
@@ -12,6 +20,7 @@ install:
 
   # Build only the kotlin module and publish to Maven Local
   - ./gradlew :calvin-rive-android:kotlin:publishToMavenLocal -x test
+
 
 # Optional: skip tests if you want faster builds
 # skip:
