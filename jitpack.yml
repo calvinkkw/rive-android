@@ -19,7 +19,7 @@ install:
   - ./gradlew clean
 
   # Build only the kotlin module and publish to Maven Local
-  - ./gradlew :calvin-rive-android:kotlin:publishToMavenLocal -x test
+  - ./gradlew :kotlin:publishToMavenLocal -x test
 
 
 # Optional: skip tests if you want faster builds
